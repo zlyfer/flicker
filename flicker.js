@@ -41,9 +41,7 @@ class Flicker {
 		push();
 		stroke(0);
 		strokeWeight(this.size);
-		let x = random(this.pos.x - this.force / 250, this.pos.x + this.force / 250);
-		let y = random(this.pos.y - this.force / 250, this.pos.y + this.force / 250);
-		point(x, y);
+		point(this.pos.x, this.pos.y);
 		pop();
 	}
 
@@ -72,7 +70,9 @@ class Flicker {
 				this.oNewP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
 			}
 			this.newP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
-			point(this.newP.x, this.newP.y);
+			let x = random(this.newP.x - this.force / 250, this.newP.x + this.force / 250);
+			let y = random(this.newP.y - this.force / 250, this.newP.y + this.force / 250);
+			point(x, y);
 			strokeWeight(5);
 			line(this.newP.x, this.newP.y, this.oNewP.x, this.oNewP.y);
 			pop();

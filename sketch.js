@@ -1,4 +1,5 @@
 var flicker;
+const maxforce = 500;
 
 function preload() {}
 

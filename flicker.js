@@ -18,6 +18,8 @@ class Flicker {
 		this.isDragged = false;
 		this.doFlick = false;
 		this.doHit = false;
+		this.doExplode = false;
+		this.explosion = 0;
 	}
 
 	process() {
@@ -27,55 +29,60 @@ class Flicker {
 		this.flick();
 		this.hit();
 		this.edge();
+		this.explode();
 	}
 
 
 	show() {
-		if (this.isDragged && !this.doHit) {
+		if (!this.doExplose) {
+			if (this.isDragged && !this.doHit) {
+				push();
+				noStroke();
+				fill(230);
+				ellipse(this.pos.x, this.pos.y, this.size + maxforce)
+				pop();
+			}
 			push();
-			noStroke();
-			fill(230);
-			ellipse(this.pos.x, this.pos.y, this.size + maxforce)
+			stroke(0);
+			strokeWeight(this.size);
+			point(this.pos.x, this.pos.y);
 			pop();
 		}
-		push();
-		stroke(0);
-		strokeWeight(this.size);
-		point(this.pos.x, this.pos.y);
-		pop();
 	}
 
 	showForce(size, thick) {
-		push();
-		noFill();
-		if (thick) {
-			strokeWeight(2);
-		} else {
-			strokeWeight(1);
-		}
-		ellipse(this.pos.x, this.pos.y, this.size + size);
-		if (this.isDragged) {
+		if (!this.doExplode) {
 			push();
-			strokeWeight(12);
-			stroke(0);
-			translate(this.pos.x, this.pos.y)
-			if (!this.doFlick) {
-				let normV = createVector(1, 0);
-				let mouseV = createVector(mouseX, mouseY).sub(this.pos.x, this.pos.y);
-				let angle = normV.angleBetween(mouseV);
-				if (mouseY < this.pos.y) {
-					angle = -angle;
-				}
-				this.oAngle = angle;
-				this.oNewP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
+			noFill();
+			if (thick) {
+				strokeWeight(2);
+			} else {
+				strokeWeight(1);
 			}
-			this.newP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
-			let x = random(this.newP.x - this.force / 250, this.newP.x + this.force / 250);
-			let y = random(this.newP.y - this.force / 250, this.newP.y + this.force / 250);
-			point(x, y);
-			strokeWeight(5);
-			line(this.newP.x, this.newP.y, this.oNewP.x, this.oNewP.y);
-			pop();
+			ellipse(this.pos.x, this.pos.y, this.size + size);
+			if (this.isDragged) {
+				push();
+				strokeWeight(12);
+				stroke(0);
+				translate(this.pos.x, this.pos.y)
+				if (!this.doFlick) {
+					let normV = createVector(1, 0);
+					let mouseV = createVector(mouseX, mouseY).sub(this.pos.x, this.pos.y);
+					let angle = normV.angleBetween(mouseV);
+					if (mouseY < this.pos.y) {
+						angle = -angle;
+					}
+					this.oAngle = angle;
+					this.oNewP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
+				}
+				this.newP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
+				let x = random(this.newP.x - this.force / 250, this.newP.x + this.force / 250);
+				let y = random(this.newP.y - this.force / 250, this.newP.y + this.force / 250);
+				point(x, y);
+				strokeWeight(5);
+				line(this.newP.x, this.newP.y, this.oNewP.x, this.oNewP.y);
+				pop();
+			}
 		}
 	}
 
@@ -140,12 +147,36 @@ class Flicker {
 
 	edge() {
 		if (
-			this.pos.x > width ||
-			this.pos.x < 0 ||
-			this.pos.y > height ||
-			this.pos.y < 0
+			this.pos.x + this.size >= width ||
+			this.pos.x <= this.size ||
+			this.pos.y + this.size >= height ||
+			this.pos.y <= this.size
 		) {
-			flicker = new Flicker(width / 2, height / 2, 10);
+			// flicker = new Flicker(width / 2, height / 2, 10);
+			this.doExplode = true;
+			this.doFlick = false;
+			this.doHit = false;
+			this.isDragged = false;
+			this.force = 0;
+			this.oAngle = 0;
+			this.isHover = false;
+			this.oNewP = 0;
+			this.newP = 0;
+		}
+	}
+
+	explode() {
+		if (this.doExplode) {
+			this.explosion += this.oForce / 10;
+			for (let i = 0; i <= 360; i += 7) {
+				push();
+				translate(this.pos.x, this.pos.y);
+				rotate(radians(i));
+				stroke(0);
+				strokeWeight(8)
+				point(0, this.explosion);
+				pop();
+			}
 		}
 	}
 }

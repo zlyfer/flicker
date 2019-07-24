@@ -1,14 +1,8 @@
 class Flicker {
 	constructor(x, y, size) {
 		this.size = size || 10;
-		this.pos = createVector(
-			x || random(this.size, width - this.size),
-			y || random(this.size, height - this.size)
-		);
-		this.oPos = createVector(
-			x || random(this.size, width - this.size),
-			y || random(this.size, height - this.size)
-		);
+		this.pos = createVector(x || random(this.size, width - this.size), y || random(this.size, height - this.size));
+		this.oPos = createVector(x || random(this.size, width - this.size), y || random(this.size, height - this.size));
 		this.oAngle = 0;
 		this.oForce = 0;
 		this.oNewP = 0;
@@ -32,14 +26,13 @@ class Flicker {
 		this.explode();
 	}
 
-
 	show() {
 		if (!this.doExplose) {
 			if (this.isDragged && !this.doHit) {
 				push();
 				noStroke();
 				fill(230);
-				ellipse(this.pos.x, this.pos.y, this.size + maxforce)
+				ellipse(this.pos.x, this.pos.y, this.size + maxforce);
 				pop();
 			}
 			push();
@@ -64,7 +57,7 @@ class Flicker {
 				push();
 				strokeWeight(12);
 				stroke(0);
-				translate(this.pos.x, this.pos.y)
+				translate(this.pos.x, this.pos.y);
 				if (!this.doFlick) {
 					let normV = createVector(1, 0);
 					let mouseV = createVector(mouseX, mouseY).sub(this.pos.x, this.pos.y);
@@ -73,9 +66,9 @@ class Flicker {
 						angle = -angle;
 					}
 					this.oAngle = angle;
-					this.oNewP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
+					this.oNewP = p5.Vector.fromAngle(this.oAngle).mult(this.force / 2 + 5);
 				}
-				this.newP = p5.Vector.fromAngle(this.oAngle).mult((this.force / 2) + 5);
+				this.newP = p5.Vector.fromAngle(this.oAngle).mult(this.force / 2 + 5);
 				let x = random(this.newP.x - this.force / 250, this.newP.x + this.force / 250);
 				let y = random(this.newP.y - this.force / 250, this.newP.y + this.force / 250);
 				point(x, y);
@@ -88,10 +81,7 @@ class Flicker {
 
 	mouseHover() {
 		if (!this.doFlick) {
-			if (
-				abs(mouseX - this.pos.x) <= (this.size + 10) &&
-				abs(mouseY - this.pos.y) <= (this.size + 10)
-			) {
+			if (abs(mouseX - this.pos.x) <= this.size + 10 && abs(mouseY - this.pos.y) <= this.size + 10) {
 				if (!this.isDragged) {
 					this.showForce(20, true);
 				}
@@ -107,7 +97,7 @@ class Flicker {
 	dragForce() {
 		if (mouseIsPressed && (this.isHover || this.isDragged) && !this.doFlick) {
 			this.isDragged = true;
-			this.force = abs(mouseX - this.pos.x) + abs(mouseY - this.pos.y)
+			this.force = abs(mouseX - this.pos.x) + abs(mouseY - this.pos.y);
 			if (this.force < 20) {
 				this.force = 20;
 			}
@@ -146,12 +136,7 @@ class Flicker {
 	}
 
 	edge() {
-		if (
-			this.pos.x + this.size >= width ||
-			this.pos.x <= this.size ||
-			this.pos.y + this.size >= height ||
-			this.pos.y <= this.size
-		) {
+		if (this.pos.x + this.size >= width || this.pos.x <= this.size || this.pos.y + this.size >= height || this.pos.y <= this.size) {
 			// flicker = new Flicker(width / 2, height / 2, 10);
 			this.doExplode = true;
 			this.doFlick = false;
@@ -173,7 +158,7 @@ class Flicker {
 				translate(this.pos.x, this.pos.y);
 				rotate(radians(i));
 				stroke(0);
-				strokeWeight(8)
+				strokeWeight(8);
 				point(0, this.explosion);
 				pop();
 			}
